@@ -1,0 +1,7 @@
+# 沿用 Phase 1 既有 Worker 名稱，部署後網址不變、LINE webhook 與密鑰都不必重設。
+name = "mute-limit-6246linkou-line-bot"
+main = "src/index.js"
+compatibility_date = "2025-06-01"
+
+# 密鑰（CHANNEL_SECRET / CHANNEL_ACCESS_TOKEN）不寫在這裡，
+# 改用 Worker 的加密 Secret（Phase 1 已設定，沿用即可）。

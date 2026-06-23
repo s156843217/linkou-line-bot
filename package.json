@@ -1,0 +1,13 @@
+{
+  "name": "linkou-line-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "林口工具箱 LINE 官方帳號自動回覆機器人（學區查詢）",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}
