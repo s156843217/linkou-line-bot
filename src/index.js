@@ -26,11 +26,24 @@ export default {
   },
 };
 
+// 圖文選單「聯絡我們」替客戶送出的固定句，與其回覆（不進學區查詢）
+const CONTACT_TRIGGER = "我想詢問房屋買賣";
+const CONTACT_REPLY =
+  "已收到您的詢問 🙋 我們會盡快由真人回覆您。\n\n" +
+  "也歡迎直接留言：想看的社區或物件、預算與需求，方便我們先幫您準備資料。\n\n" +
+  "太平洋房屋 林口捷運加盟店\n李天夏 0936-123-288\n温美慈 0976-109-326";
+
 // 處理單一事件：查到學區→回 Flex 圖卡；查不到／提示→維持純文字
 async function handleEvent(event, env) {
   if (event.type !== "message" || event.message.type !== "text") return;
   try {
-    const r = SchoolLogic.lookupText(event.message.text);
+    const text = event.message.text.trim();
+    if (text === CONTACT_TRIGGER) {
+      const resC = await reply(env.CHANNEL_ACCESS_TOKEN, event.replyToken, [{ type: "text", text: CONTACT_REPLY }]);
+      if (resC.status !== 200) console.log("回覆 API 狀態 =", resC.status, await resC.text());
+      return;
+    }
+    const r = SchoolLogic.lookupText(text);
     const messages = r.card ? [buildFlexCard(r.card)] : [{ type: "text", text: r.reply }];
     const res = await reply(env.CHANNEL_ACCESS_TOKEN, event.replyToken, messages);
     if (res.status !== 200) console.log("回覆 API 狀態 =", res.status, await res.text());
