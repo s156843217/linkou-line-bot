@@ -146,9 +146,26 @@
     return t;
   }
 
+  /* ── 產生圖卡用結構化資料（給 LINE Flex 等畫面自行排版；仍是純函式）── */
+  function buildCardData(title, li, lin, res){
+    const mk = (rules, many) => rules.map(r => ({
+      seg: many ? rangeLabel(r) : '',                                   // 同里分鄰時標示鄰段
+      name: r.base || ('自由學區 ' + r.free.join('/')),
+      full: !!(r.base && D.FULL_ES.includes(r.base))                    // 額滿學校旗標
+    }));
+    return {
+      title,
+      li,
+      lin: (lin != null && lin !== '') ? String(lin) : '',
+      es: mk(res.es, res.es.length > 1),
+      jh: mk(res.jh, res.jh.length > 1)
+    };
+  }
+
   /* ── 總機：一段文字 → 回覆內容 ──────────────────────────
      判斷使用者輸入屬於 門牌地址 / 社區名 / 里別，分流查詢後回傳文字。
-     回傳 { ok, reply }：ok=true 表查到學區；ok=false 表提示或查無。 */
+     回傳 { ok, reply, card }：ok=true 表查到學區（card＝圖卡結構化資料）；
+     ok=false 表提示或查無（無 card，沿用純文字）。 */
   function lookupText(text){
     const q = (text || '').trim();
     if (!q) return { ok: false, reply: '請輸入地址或社區名稱，例如「文化三路一段617巷2號」或「世紀長虹」。' };
@@ -160,11 +177,13 @@
       const res = resolve(li, lin);
       if (res){
         let reply = buildSummaryText(li, lin, res);
+        const card = buildCardData(q, li, lin, res);
         if (hit.cands.length > 1){
           const list = hit.cands.map(c => `${c.li} ${c.lin}鄰`).join('　或　');
           reply = `⚠️ 此門牌位於里界、橫跨多里（${list}），以下先以第一個為準，建議向房仲確認。\n\n` + reply;
+          card.warn = `此門牌位於里界、橫跨多里（${list}），先以第一個為準，建議向房仲確認。`;
         }
-        return { ok: true, reply };
+        return { ok: true, reply, card };
       }
     }
 
@@ -173,7 +192,7 @@
     if (comm){
       if (comm.type === 'single'){
         const res = resolve(comm.li, comm.lin);
-        if (res) return { ok: true, reply: buildSummaryText(comm.li, comm.lin, res) };
+        if (res) return { ok: true, reply: buildSummaryText(comm.li, comm.lin, res), card: buildCardData(comm.name, comm.li, comm.lin, res) };
       }
       if (comm.type === 'list') return { ok: false, reply: '找到多個相近社區，請回覆完整名稱：\n' + comm.names.map(n => '・' + n).join('\n') };
       if (comm.type === 'unknown') return { ok: false, reply: `「${comm.name}」目前里別待定位，請改用完整門牌地址查詢，或洽房仲協助。` };
@@ -183,7 +202,7 @@
     const liHit = matchLi(q);
     if (liHit){
       const res = resolve(liHit.li, liHit.lin);
-      if (res) return { ok: true, reply: buildSummaryText(liHit.li, liHit.lin, res) };
+      if (res) return { ok: true, reply: buildSummaryText(liHit.li, liHit.lin, res), card: buildCardData(q, liHit.li, liHit.lin, res) };
     }
 
     // ④ 查無
@@ -196,7 +215,7 @@
   }
 
   /* ── 對外輸出 ──────────────────────────────────────── */
-  const api = { parseHouse, houseLookup, resolve, searchComm, resolveCommunity, matchLi, buildSummaryText, lookupText };
+  const api = { parseHouse, houseLookup, resolve, searchComm, resolveCommunity, matchLi, buildSummaryText, buildCardData, lookupText };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;       // Node / Worker
   else (typeof self !== 'undefined' ? self : this).SchoolLogic = api;              // 瀏覽器：掛全域 SchoolLogic
 })();
