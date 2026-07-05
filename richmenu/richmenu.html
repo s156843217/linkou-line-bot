@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>圖文選單設計稿（截圖用 2500×1686）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+/* 尺寸＝LINE 圖文選單大型版 2500×1686；版型＝2×2 四格(田字)，
+   每格 1250×843，內容置中，格線對齊 LINE 的點擊分區 */
+:root{
+  --bg:#FBF6EE; --bg2:#F4ECDF; --ink:#26221C; --ink-soft:#5C544A;
+  --clay:#BD5E39; --clay-d:#9C4A2B; --teal:#3C7A62; --teal-d:#2E5F4C; --line:#E8DFD2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:2500px;height:1686px;overflow:hidden;background:var(--bg);
+  font-family:'Noto Sans TC','Microsoft JhengHei',sans-serif;color:var(--ink)}
+.grid{display:grid;width:2500px;height:1686px;
+  grid-template-columns:1250px 1250px;grid-template-rows:843px 843px}
+.cell{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:34px;border:3px solid var(--line);position:relative}
+/* 交界處只留一條線 */
+.cell:nth-child(1){border-right:none;border-bottom:none}
+.cell:nth-child(2){border-bottom:none}
+.cell:nth-child(3){border-right:none}
+.icon{font-size:210px;line-height:1}
+.title{font-family:'Noto Serif TC','Noto Sans TC',serif;font-weight:900;
+  font-size:118px;letter-spacing:6px}
+.pill{font-size:52px;font-weight:700;color:#fff;padding:16px 54px;border-radius:999px;letter-spacing:3px}
+.clay .pill{background:var(--clay)} .teal .pill{background:var(--teal)}
+.clay .title{color:var(--clay-d)} .teal .title{color:var(--teal-d)}
+/* 每格左上角的小標籤，增加一點層次 */
+.tag{position:absolute;top:44px;left:56px;font-size:40px;font-weight:700;
+  color:var(--ink-soft);letter-spacing:4px}
+.cell:nth-child(2n){background:var(--bg2)}
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="cell clay">
+    <div class="tag">01</div>
+    <div class="icon">🏫</div>
+    <div class="title">學區快查</div>
+    <div class="pill">輸入社區名・秒回學區</div>
+  </div>
+  <div class="cell teal">
+    <div class="tag">02</div>
+    <div class="icon">💰</div>
+    <div class="title">房貸試算</div>
+    <div class="pill">月付金・可購總價</div>
+  </div>
+  <div class="cell teal">
+    <div class="tag">03</div>
+    <div class="icon">🚌</div>
+    <div class="title">公車路線</div>
+    <div class="pill">社區附近站牌・直達</div>
+  </div>
+  <div class="cell clay">
+    <div class="tag">04</div>
+    <div class="icon">💬</div>
+    <div class="title">聯絡我們</div>
+    <div class="pill">真人服務・房屋買賣</div>
+  </div>
+</div>
+</body>
+</html>
