@@ -49,7 +49,7 @@ async function handleEvent(event, env) {
     if (res.status !== 200) console.log("回覆 API 狀態 =", res.status, await res.text());
   } catch (e) {
     console.log("處理事件出錯 =", e && e.stack || String(e));
-    await reply(env.CHANNEL_ACCESS_TOKEN, event.replyToken, [{ type: "text", text: "查詢時發生問題，請稍後再試，或改用網頁版：https://s156843217.github.io/linkou-toolbox/school/" }]);
+    await reply(env.CHANNEL_ACCESS_TOKEN, event.replyToken, [{ type: "text", text: "查詢時發生問題，請稍後再試，或改用網頁版：https://swcasa.com/school/" }]);
   }
 }
 
@@ -112,7 +112,7 @@ function buildFlexCard(card) {
         contents: [
           {
             type: "button", style: "primary", height: "sm", color: COLOR.clay,
-            action: { type: "uri", label: "網頁版查詢（含地圖）", uri: "https://s156843217.github.io/linkou-toolbox/school/" },
+            action: { type: "uri", label: "網頁版查詢（含地圖）", uri: "https://swcasa.com/school/" },
           },
           { type: "text", size: "xs", color: COLOR.inkSoft, wrap: true, margin: "sm", text: "李天夏 0936-123-288\n温美慈 0976-109-326" },
         ],
