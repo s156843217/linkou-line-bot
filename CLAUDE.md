@@ -7,6 +7,7 @@
 ## 架構
 
 - `src/index.js`：Worker 本體——LINE webhook 驗簽（`x-line-signature`，HMAC-SHA256）→ 呼叫 `SchoolLogic.lookupText(文字)` → 查到學區回 **Flex 圖卡**（`buildFlexCard`，配色沿用網站 style.css 設計系統），查無/提示維持純文字。
+- **查行情按鈕（2026-07-11）**：學區卡底部 postback 按鈕（`data="price|社區名"`）→ `handlePostback` 線上抓 `https://swcasa.com/price-summary.json`（toolbox 每月 Actions 自動產，Cloudflare 邊緣快取 1hr）→ 回行情摘要 Flex 卡（墨綠頭）＋連結 `price/?c=`。摘要抓不到或查無仍回連結卡，不中斷。走 reply 不吃訊息額度。
 - `school-logic.js`：學區純邏輯（UMD 式：瀏覽器掛 `window.SchoolLogic`、Worker 用 require），**不碰畫面**，函式內資料一律走 `D.xxx`。
 - `linkou-data.js`：主專案那份的**複本（手動同步）**。學區資料更新流程見 `linkou-toolbox/docs/DATA-UPDATE.md` 第 2 節第 5 步：複製整份過來 → push → 手機實測。
 - Worker 名稱 `mute-limit-6246linkou-line-bot` 寫死在 `wrangler.toml`——**不要改名**，改了網址、webhook、密鑰綁定全斷。
