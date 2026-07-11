@@ -224,13 +224,13 @@ function buildFlexCard(card) {
         paddingAll: "16px", paddingTop: "0px",
         contents: [
           {
-            // 查行情：postback（帶社區名/地址）→ 回行情摘要卡，走 reply 不吃訊息額度
-            type: "button", style: "primary", height: "sm", color: COLOR.teal,
-            action: { type: "postback", label: "📈 查這社區的行情", data: "price|" + card.title, displayText: `查「${card.title}」的行情` },
+            type: "button", style: "primary", height: "sm", color: COLOR.clay,
+            action: { type: "uri", label: "學區網頁查詢（含地圖）", uri: "https://swcasa.com/school/" },
           },
           {
-            type: "button", style: "primary", height: "sm", color: COLOR.clay,
-            action: { type: "uri", label: "網頁版查詢（含地圖）", uri: "https://swcasa.com/school/" },
+            // 查行情：postback（帶社區名/地址）→ 回行情摘要卡，走 reply 不吃訊息額度
+            type: "button", style: "primary", height: "sm", color: COLOR.teal,
+            action: { type: "postback", label: "📈 查看社區行情", data: "price|" + card.title, displayText: `查「${card.title}」的行情` },
           },
           { type: "text", size: "xs", color: COLOR.inkSoft, wrap: true, margin: "sm", text: "李天夏 0936-123-288\n温美慈 0976-109-326" },
         ],
