@@ -166,8 +166,7 @@ function buildPriceFlexCard(name, s) {
     type: "flex",
     altText: alt.slice(0, 380),
     contents: {
-      type: "bubble",
-      size: "giga",   // 吃滿聊天室寬度（預設 mega 偏窄）
+      type: "bubble",   // 寬度用預設 mega：giga 整個橫幅太寬（2026-07-16 使用者實測後拍板）
       header: {
         type: "box", layout: "vertical", backgroundColor: COLOR.teal, paddingAll: "16px",
         contents: [
@@ -236,8 +235,7 @@ function buildFlexCard(card) {
     type: "flex",
     altText: alt,
     contents: {
-      type: "bubble",
-      size: "giga",   // 吃滿聊天室寬度（預設 mega 偏窄）
+      type: "bubble",   // 寬度用預設 mega：giga 整個橫幅太寬（2026-07-16 使用者實測後拍板）
       header: {
         type: "box", layout: "vertical", backgroundColor: COLOR.clay, paddingAll: "16px",
         contents: [
