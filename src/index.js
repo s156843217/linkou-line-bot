@@ -105,6 +105,30 @@ function rocDate(d) {
   return s.length >= 7 ? `${s.slice(0, 3)}/${s.slice(3, 5)}/${s.slice(5, 7)}` : s;
 }
 
+// ===== 分享給朋友（LIFF 選人分享）=====
+// Flex 圖卡 LINE 不開放收件人直接轉傳，所以卡上放「分享」鈕 →
+// 開啟 share/ 社區置產情報頁（既有 LIFF app，endpoint＝swcasa.com/share/），
+// 帶 &share=1 該頁會自動跳出「選好友」視窗，選完把情報卡傳給朋友。
+const SHARE_LIFF = "https://liff.line.me/2010606487-Km5pYNnK";
+
+// 產生情報頁參數：門牌→a=、社區→c=（用建檔正式名）；里別等情報頁做不出內容→null（不放分享鈕）
+function shareQuery(q) {
+  const hit = SchoolLogic.houseLookup(q);
+  if (hit && hit.cands.length) return "a=" + encodeURIComponent(q);
+  const c = SchoolLogic.resolveCommunity(q);
+  if (c && c.type === "single") return "c=" + encodeURIComponent(c.name);
+  return null;
+}
+
+// 分享鈕（淺色次要樣式，與主按鈕區隔）；qs 為 null 時回空陣列＝不顯示
+function shareButton(qs) {
+  if (!qs) return [];
+  return [{
+    type: "button", style: "secondary", height: "sm",
+    action: { type: "uri", label: "📤 分享給朋友", uri: `${SHARE_LIFF}?${qs}&share=1` },
+  }];
+}
+
 // 行情摘要 → Flex 圖卡（配色沿用設計系統，行情卡用墨綠與學區卡的陶土橘區隔）
 function buildPriceFlexCard(name, s) {
   const url = "https://swcasa.com/price/?c=" + encodeURIComponent(name);
@@ -143,6 +167,7 @@ function buildPriceFlexCard(name, s) {
     altText: alt.slice(0, 380),
     contents: {
       type: "bubble",
+      size: "giga",   // 吃滿聊天室寬度（預設 mega 偏窄）
       header: {
         type: "box", layout: "vertical", backgroundColor: COLOR.teal, paddingAll: "16px",
         contents: [
@@ -159,6 +184,7 @@ function buildPriceFlexCard(name, s) {
             type: "button", style: "primary", height: "sm", color: COLOR.teal,
             action: { type: "uri", label: "看逐筆明細＋鄰近成交", uri: url },
           },
+          ...shareButton(shareQuery(name)),
           { type: "text", size: "xs", color: COLOR.inkSoft, wrap: true, margin: "sm", text: "李天夏 0936-123-288\n温美慈 0976-109-326" },
         ],
       },
@@ -211,6 +237,7 @@ function buildFlexCard(card) {
     altText: alt,
     contents: {
       type: "bubble",
+      size: "giga",   // 吃滿聊天室寬度（預設 mega 偏窄）
       header: {
         type: "box", layout: "vertical", backgroundColor: COLOR.clay, paddingAll: "16px",
         contents: [
@@ -232,6 +259,7 @@ function buildFlexCard(card) {
             type: "button", style: "primary", height: "sm", color: COLOR.teal,
             action: { type: "postback", label: "📈 查看社區行情", data: "price|" + card.title, displayText: `查「${card.title}」的行情` },
           },
+          ...shareButton(shareQuery(card.title)),
           { type: "text", size: "xs", color: COLOR.inkSoft, wrap: true, margin: "sm", text: "李天夏 0936-123-288\n温美慈 0976-109-326" },
         ],
       },
