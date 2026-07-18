@@ -206,7 +206,11 @@ function schoolRows(label, items) {
         { type: "text", text: it.name, size: "sm", weight: "bold", color: COLOR.ink, wrap: true, flex: 7 },
       ],
     });
-    if (it.full) rows.push({ type: "text", text: "⚠ 額滿學校，須提早設籍", size: "xs", color: COLOR.clayD, margin: "xs" });
+    if (it.full) {
+      rows.push({ type: "text", text: "⚠ 額滿學校，須提早設籍", size: "xs", color: COLOR.clayD, margin: "xs" });
+      // 最新一年的最後設籍日（資料來自 FULL_DATA，年度會跟著資料檔自動更新）
+      if (it.fullLatest) rows.push({ type: "text", text: `${it.fullLatest.y}學年最後設籍日約 ${it.fullLatest.d}，需提前${it.fullLatest.lead}設籍`, size: "xs", color: COLOR.clayD, wrap: true, margin: "xs" });
+    }
   }
   return rows;
 }

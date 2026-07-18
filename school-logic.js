@@ -11,7 +11,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     D = require('./linkou-data.js');                                  // Node / Worker
   } else {
-    D = { COMMUNITY, HOUSE, LI, LI_HOUSE_IDX, FULL_ES, ALIASES };     // 瀏覽器：全域 const
+    D = { COMMUNITY, HOUSE, LI, LI_HOUSE_IDX, FULL_ES, FULL_DATA, ALIASES }; // 瀏覽器：全域 const
   }
 
   /* ── 地址正規化 / 門牌解析 ──────────────────────────────── */
@@ -148,11 +148,16 @@
 
   /* ── 產生圖卡用結構化資料（給 LINE Flex 等畫面自行排版；仍是純函式）── */
   function buildCardData(title, li, lin, res){
-    const mk = (rules, many) => rules.map(r => ({
-      seg: many ? rangeLabel(r) : '',                                   // 同里分鄰時標示鄰段
-      name: r.base || ('自由學區 ' + r.free.join('/')),
-      full: !!(r.base && D.FULL_ES.includes(r.base))                    // 額滿學校旗標
-    }));
+    const mk = (rules, many) => rules.map(r => {
+      const full = !!(r.base && D.FULL_ES.includes(r.base));            // 額滿學校旗標
+      const fd = full ? (((D.FULL_DATA || {})[r.base] || [])[0] || null) : null; // 最新一年 [學年,最後設籍日,需提前,班數]
+      return {
+        seg: many ? rangeLabel(r) : '',                                 // 同里分鄰時標示鄰段
+        name: r.base || ('自由學區 ' + r.free.join('/')),
+        full,
+        fullLatest: fd ? { y: fd[0], d: fd[1], lead: fd[2] } : null     // 給畫面顯示最新額滿設籍日
+      };
+    });
     return {
       title,
       li,
